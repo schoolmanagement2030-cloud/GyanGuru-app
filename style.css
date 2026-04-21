@@ -1,0 +1,57 @@
+/* File: style.css */
+body {
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+/* Animations */
+@keyframes loading {
+    0% { width: 0%; }
+    100% { width: 100%; }
+}
+
+#progress-bar {
+    animation: loading 3.5s forwards ease-in-out;
+}
+
+.bouncy {
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Navigation Buttons */
+.nav-btn.active {
+    background-color: white;
+    color: #4f46e5;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.nav-btn {
+    color: #94a3b8;
+    transition: all 0.3s;
+}
+
+/* Custom Scrollbar for Chat */
+#chat-container::-webkit-scrollbar {
+    width: 6px;
+}
+#chat-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+#chat-container::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    border-radius: 10px;
+}
