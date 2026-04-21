@@ -1,0 +1,124 @@
+<!-- File: index.html -->
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topper AI Guru 🏆</title>
+    
+    <!-- PWA & Mobile Meta -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <!-- Custom Style Link -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Firebase SDKs (Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+</head>
+<body class="bg-indigo-50 font-['Inter']">
+
+    <!-- 1. Splash Screen -->
+    <div id="splash-screen" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-slate-900 text-white">
+        <div class="text-center animate-pulse">
+            <h1 class="text-5xl md:text-7xl font-black text-yellow-400 mb-4 drop-shadow-2xl">Topper AI Guru 🏆</h1>
+            <p class="text-slate-400 font-bold tracking-[0.3em] uppercase text-sm">Initializing Wisdom...</p>
+        </div>
+        <div class="mt-12 w-48 h-1 bg-white/10 rounded-full overflow-hidden">
+            <div id="progress-bar" class="h-full bg-yellow-400"></div>
+        </div>
+    </div>
+
+    <!-- 2. Auth / Login Screen -->
+    <div id="auth-screen" class="hidden min-h-screen flex items-center justify-center p-6">
+        <div class="bg-white p-10 rounded-[50px] shadow-2xl border-8 border-white max-w-md w-full text-center">
+            <div class="bg-indigo-600 w-20 h-20 rounded-3xl mx-auto flex items-center justify-center mb-8 bouncy shadow-lg">
+                <span class="text-4xl text-white">🎓</span>
+            </div>
+            <h1 class="text-4xl font-black text-slate-900 mb-4">Topper AI Guru</h1>
+            <p class="text-slate-500 font-bold mb-10">India's Smartest AI Teacher for your child!</p>
+            <button id="login-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-5 rounded-3xl font-black text-xl flex items-center justify-center gap-4 transition-all shadow-xl active:scale-95">
+                Google Se Login Karein
+            </button>
+        </div>
+    </div>
+
+    <!-- 3. Main Dashboard -->
+    <div id="main-app" class="hidden min-h-screen">
+        <header class="bg-white px-6 py-4 shadow-sm border-b-2 border-slate-100 flex justify-between items-center sticky top-0 z-50">
+            <span class="text-2xl font-black text-indigo-600">Topper AI 🏆</span>
+            <nav class="flex bg-slate-100 p-1 rounded-2xl">
+                <button id="view-student-btn" class="nav-btn active px-4 py-2 rounded-xl font-bold text-xs">STUDENT</button>
+                <button id="view-parent-btn" class="nav-btn px-4 py-2 rounded-xl font-bold text-xs">PARENT</button>
+            </nav>
+        </header>
+
+        <main class="p-6 max-w-4xl mx-auto">
+            <!-- Student View -->
+            <div id="student-view" class="space-y-8 animate-fade-in">
+                <section class="bg-white p-8 rounded-[40px] shadow-xl border-4 border-indigo-50 flex justify-between items-center">
+                    <div>
+                        <h2 id="student-name-display" class="text-3xl font-black">Hi, Student! 👋</h2>
+                        <p id="student-class-display" class="text-indigo-500 font-black uppercase text-xs tracking-widest mt-1">Class: N/A</p>
+                    </div>
+                    <div class="text-center bg-indigo-50 p-4 rounded-3xl min-w-[80px]">
+                        <div id="student-points" class="text-3xl font-black text-indigo-600">0</div>
+                        <span class="text-[10px] font-black text-slate-400 uppercase">Points</span>
+                    </div>
+                </section>
+
+                <!-- AI Chat Section -->
+                <section class="bg-white p-8 rounded-[40px] shadow-xl border-4 border-purple-100">
+                    <h3 class="text-2xl font-black mb-6 flex items-center gap-2">
+                        <span>🤖</span> Topper AI Guru
+                    </h3>
+                    <div id="chat-container" class="space-y-4 max-h-[400px] overflow-y-auto mb-6 p-4 bg-slate-50 rounded-3xl border-2 border-slate-100">
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border-2 border-indigo-50 font-bold text-slate-700">
+                            Puchiye mujhse koi bhi sawal! Main aapki help karne ke liye taiyaar hoon.
+                        </div>
+                    </div>
+                    <div class="flex gap-3">
+                        <input id="chat-input" type="text" class="flex-1 p-5 bg-slate-50 rounded-2xl border-2 border-slate-100 font-bold outline-none focus:border-purple-500" placeholder="Apna sawal yahan likhein...">
+                        <button id="send-chat-btn" class="bg-purple-600 text-white p-5 rounded-2xl shadow-lg hover:bg-purple-700 transition-all">
+                            ▶
+                        </button>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Parent View -->
+            <div id="parent-view" class="hidden space-y-8 animate-fade-in">
+                <div class="bg-white p-8 rounded-[40px] shadow-2xl border-4 border-orange-100">
+                    <h2 class="text-3xl font-black text-slate-900 mb-8 flex items-center gap-3">
+                       <span>⚙️</span> Parent Settings
+                    </h2>
+                    <div class="space-y-6">
+                        <div class="space-y-2">
+                            <label class="font-bold text-slate-500 uppercase text-xs">Student Name</label>
+                            <input id="input-name" class="w-full p-4 bg-slate-50 rounded-2xl border-2 border-slate-100 font-bold outline-none focus:border-orange-500" placeholder="e.g. Rahul">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="font-bold text-slate-500 uppercase text-xs">Class / Grade</label>
+                            <input id="input-class" class="w-full p-4 bg-slate-50 rounded-2xl border-2 border-slate-100 font-bold outline-none focus:border-orange-500" placeholder="e.g. 5th Standard">
+                        </div>
+                        <button id="save-profile-btn" class="w-full bg-orange-600 text-white py-5 rounded-3xl font-black text-xl shadow-xl shadow-orange-100 hover:bg-orange-700 transition-all">
+                            Save Profile
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="firebase.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
